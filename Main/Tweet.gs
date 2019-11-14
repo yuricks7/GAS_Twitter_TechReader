@@ -3,18 +3,20 @@ function Main() {
   var sheet  = ss.getSheetByName('シート1');
   var values = sheet.getDataRange().getValues();
 
-  const SEARCH_COL = 8;
-  var index = getBlankRowIndex(values, SEARCH_COL - 1);
+  const POST_CHECK_COL = 8;
+  var index = getBlankRowIndex(values, POST_CHECK_COL - 1);
   
   // 何もなければ終了
   if (index < 0) return
 
   var feeds = values[index];
-  var tweetSource = new TweetSource(feeds,ss);
+  var tweetSource = new Feed(feeds,ss);
   var tweet = tweetSource.tweet;
   
-  postTweet(tweet);
-  sheet.getRange(index + 1, SEARCH_COL).setValue(true);
+  var twitter = new TwitterApp;
+  twitter.post(tweet);
+
+  sheet.getRange(index + 1, POST_CHECK_COL).setValue(true);
 }
 
 /**
@@ -26,6 +28,5 @@ var getBlankRowIndex = function(values, colIndex) {
   var transposedValues = _.zip.apply(_, values);
   var index            = transposedValues[colIndex].indexOf('');
 
-  return index
-    
+  return index;
 }

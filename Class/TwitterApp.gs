@@ -4,18 +4,16 @@
  * https://moripro.net/gas-spreadsheet-random-tweet/
  */
 
-/**
- * 認証インスタンス
- *
- * @note グローバル変数なので扱いに注意
- *
- */
-var twitter = generateInstance();
+var TwitterApp = function() {
+  // 認証インスタンス
+  this.authInstance = generateInstance();
+
+};
 
 /**
  * 認証用インスタンスの生成
  */
-function generateInstance() {
+var generateInstance = function() {
   var props = PropertiesService.getScriptProperties();
   
   var instance = TwitterWebService.getInstance(
@@ -29,36 +27,28 @@ function generateInstance() {
 /**
  * ツイートを投稿
  */
-function postTweet(m) {
+TwitterApp.prototype.post = function(m) {
+  var service = this.authInstance.getService();    
+  const END_POINT_URL = 'https://api.twitter.com/1.1/statuses/update.json';
   
-  var service  = twitter.getService();
-  var endPointUrl = 'https://api.twitter.com/1.1/statuses/update.json';
-  
-  var response = service.fetch(endPointUrl, {
+  var response = service.fetch(END_POINT_URL, {
     method: 'post',
     payload: {
       status: m
     }
-  });  
-};
+  });
+}
 
 /**
  * アプリを連携認証する
  */
-function authorize() {
-  twitter.authorize();
+TwitterApp.prototype.authorize = function() {
+  this.authInstance.authorize();
 };
 
 /**
  * 認証を解除する
  */
-function reset() {
-  twitter.reset();
-};
-
-/**
- * 認証後のコールバック
- */
-function authCallback(request) {
-  return twitter.authCallback(request);
+TwitterApp.prototype.reset = function() {
+  this.authInstance.reset();
 };

@@ -1,9 +1,9 @@
-var TweetSource = function(feeds, ss) {
-  var serialValue = feeds[2];
+var Feed = function(feeds, ss) {
+//  var serialValue = feeds[2];
 //  Logger.log(serialValue);
 
-  var unixValue   = (serialValue - 25569) * 24*60*60;
-  var date = new Date(unixValue * 1000);
+//  var unixValue   = (serialValue - 25569) * 24*60*60;
+//  var date = new Date(unixValue * 1000);
 
   this.feedTitle  = feeds[0];
   this.feedUrl    = feeds[1];
@@ -49,7 +49,7 @@ var getFeedCategory = function(key, arr2d, masterCol, searchCol) {
  * @param {object} feeds フィード1行分の配列
  * @param {object} ss 対象のスプレッドシート
  */
-TweetSource.prototype.getTweetText = function() {
+Feed.prototype.getTweetText = function() {
   
   const LF  = '\n';
   var tweet = '';
