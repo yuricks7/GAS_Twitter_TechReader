@@ -21,22 +21,9 @@ var TweetSource = function(feeds, ss) {
 
   this.feedCategory = getFeedCategory(this.feedTitle, feedValues, 2, 1);
 
+  // ツイート本文
+  this.tweet = this.getTweetText();
 };
-
-///**
-// * 時刻を読みやすいように変換する
-// *
-// * Moment.jsライブラリを使用
-// * ライブラリ・キー：MHMchiX6c1bwSqGM1PZiW_PxhMjh3Sh48
-// */
-//var getJstString = function() {
-//  
-//  var ret = Moment.moment(this.postTime).format('YYYY/MM/DD (ddd) hh:mm:ss');
-//  Logger.log(typeof ret);
-//  Logger.log(ret);
-//
-//  return String(ret) + ' - JST';
-//}
 
 /**
  * フィードシートからブログのカテゴリを取得する
@@ -54,4 +41,42 @@ var getFeedCategory = function(key, arr2d, masterCol, searchCol) {
   var ret              = arr2d[targetIndex][searchCol - 1];
   
   return ret
+};
+
+/**
+ * ツイートの本文を作成する
+ *
+ * @param {object} feeds フィード1行分の配列
+ * @param {object} ss 対象のスプレッドシート
+ */
+TweetSource.prototype.getTweetText = function() {
+  
+  const LF  = '\n';
+  var tweet = '';
+  tweet += '▼[' + this.feedCategory + '] ' +　this.feedTitle;
+  tweet += LF + this.entryTitle;
+  tweet += LF + this.entryUrl;
+  tweet += LF + this.body;
+
+  // 長かったらカットしておく
+  if (tweet.length > 140) {
+    tweet = tweet.substring(0, 139) + '…';
+  }
+  
+  return tweet;
 }
+
+///**
+// * 時刻を読みやすいように変換する
+// *
+// * Moment.jsライブラリを使用
+// * ライブラリ・キー：MHMchiX6c1bwSqGM1PZiW_PxhMjh3Sh48
+// */
+//var getJstString = function() {
+//  
+//  var ret = Moment.moment(this.postTime).format('YYYY/MM/DD (ddd) hh:mm:ss');
+//  Logger.log(typeof ret);
+//  Logger.log(ret);
+//
+//  return String(ret) + ' - JST';
+//}
