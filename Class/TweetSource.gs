@@ -1,19 +1,19 @@
 var TweetSource = function(feeds, ss) {
   var serialValue = feeds[2];
-  Logger.log(serialValue);
+//  Logger.log(serialValue);
 
   var unixValue   = (serialValue - 25569) * 24*60*60;
   var date = new Date(unixValue * 1000);
 
-  this.feedTitle   = feeds[0];
-  this.feedUrl     = feeds[1];
-  this.postTime    = feeds[2];       // ?
+  this.feedTitle  = feeds[0];
+  this.feedUrl    = feeds[1];
+  this.postTime   = feeds[2];       // ?
 //  this.postTimeJst = getJstString(); // ?
 
-  //  this.thumnail    = feeds[3]; // URLの方が良いかも？
-  this.entryTitle  = feeds[4];
-  this.entryUrl    = feeds[5];
-  this.body        = feeds[6];
+//  this.thumnail   = feeds[3]; // URLの方が良いかも？
+  this.entryTitle = feeds[4];
+  this.entryUrl   = feeds[5];
+  this.body       = feeds[6];
 
   /* フィードシートからカテゴリの検索 */
   var feedSheet  = ss.getSheetByName('フィード');
