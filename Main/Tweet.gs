@@ -21,6 +21,18 @@ function Main() {
 
 /**
  * 「TRUE」と入っていない行を探す
+ *
+ * 外部ライブラリを使用
+ * [Name]    Underscore for GAS
+ * [Key]     M3i7wmUA_5n0NSEaa6NnNqOBao7QLBR4j
+ * [version] 2.0
+ * [note]    類似ライブラリ（※）では使えない処理があるので混同しないように注意。
+ *           ※UnderscoreGS（'MiC3qjLYVUjCCUQpMqPPTWUF7jOZt2NQ8'）
+ *
+ * @param {array}    values 検索先の二次元配列
+ * @param {number} colIndex 検索列のインデックス
+ *
+ * @return {number} 「TRUE」と入っていない行のインデックス
  */
 var getBlankRowIndex = function(values, colIndex) {
   // 二次元配列内でVLOOKUP
@@ -29,4 +41,4 @@ var getBlankRowIndex = function(values, colIndex) {
   var index            = transposedValues[colIndex].indexOf('');
 
   return index;
-}
+};

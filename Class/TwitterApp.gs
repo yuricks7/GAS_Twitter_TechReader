@@ -1,13 +1,19 @@
-/*
- * 参照
+/**
+ * Twitterの実際のアクションを扱うクラス
+ *
+ * ▼参照
  * 【GAS】スプレッドシートのランダムな行データを取得してツイート（GAS×TwitterBot⑤） | もりさんのプログラミング手帳
  * https://moripro.net/gas-spreadsheet-random-tweet/
+ *
+ * クラス全体で外部ライブラリを使用
+ * [name]    TwitterWebService.gs
+ * [key]     1rgo8rXsxi1DxI_5Xgo_t3irTw1Y5cxl2mGSkbozKsSXf2E_KBBPC3xTF
+ * [version] 2.0
+ * [source]  https://gist.github.com/M-Igashi/750ab08718687d11bff6322b8d6f5d90
  */
-
 var TwitterApp = function() {
   // 認証インスタンス
   this.authInstance = generateInstance();
-
 };
 
 /**
@@ -26,6 +32,8 @@ var generateInstance = function() {
 
 /**
  * ツイートを投稿
+ *
+ * @param {string} 投稿するメッセージ
  */
 TwitterApp.prototype.post = function(m) {
   var service = this.authInstance.getService();    
