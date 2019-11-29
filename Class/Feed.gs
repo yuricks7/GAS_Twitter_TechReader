@@ -42,8 +42,8 @@ var getFeedCategory = function(ss, key) {
   var masterSheet  = ss.getSheetByName('フィード');
   var masterValues = masterSheet.getDataRange().getValues();
 
-  const TITLE_COL_INDEX    = 1;
   const CATEGORY_COL_INDEX = 0;
+  const TITLE_COL_INDEX    = 1;
   
   return vlookup(key, masterValues, TITLE_COL_INDEX, CATEGORY_COL_INDEX);
 };
@@ -69,7 +69,14 @@ var vlookup = function(key, arr2d, rowSearchColIndex, returnColIndex) {
   var _ = Underscore.load(); // Underscore for GASライブラリの呼び出し
   var transposedValues = _.zip.apply(_, arr2d);
   var targetIndex      = transposedValues[rowSearchColIndex].indexOf(key);
-  
+
+  try {
+    return arr2d[targetIndex][returnColIndex];
+  } catch(e) {
+    //  // フィード名が変わるとエラーになるので置き換え
+    //  Logger.log(key);  
+    return '???';
+  }
   return arr2d[targetIndex][returnColIndex];
 }
 

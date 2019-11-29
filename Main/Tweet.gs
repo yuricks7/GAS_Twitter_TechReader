@@ -1,22 +1,32 @@
 function Main() {
-  var ss     = SpreadsheetApp.getActiveSpreadsheet();
-  var sheet  = ss.getSheetByName('シート1');
-  var values = sheet.getDataRange().getValues();
+  try {
+    
+    var ss     = SpreadsheetApp.getActiveSpreadsheet();
+    var sheet  = ss.getSheetByName('シート1');
+    var values = sheet.getDataRange().getValues();
+    
+    const POST_CHECK_COL = 8;
+    var index = getBlankRowIndex(values, POST_CHECK_COL - 1);
+    
+    // 何もなければ終了
+    if (index < 0) return
+    
+    var feeds = values[index];
+    var tweetSource = new Feed(feeds,ss);
+    var tweet = tweetSource.tweet;
+    
+    var twitter = new TwitterApp;
+    twitter.post(tweet);
+    
+    sheet.getRange(index + 1, POST_CHECK_COL).setValue(true);
+    
+  } catch (e) {
+    var occuredTime = new Date();
+    var errorLog    = new ErrorLog(e, occuredTime);
+    var ssForLog    = SpreadsheetApp.getActiveSpreadsheet();
+    errorLog.output(ssForLog, 'エラーログ');
 
-  const POST_CHECK_COL = 8;
-  var index = getBlankRowIndex(values, POST_CHECK_COL - 1);
-  
-  // 何もなければ終了
-  if (index < 0) return
-
-  var feeds = values[index];
-  var tweetSource = new Feed(feeds,ss);
-  var tweet = tweetSource.tweet;
-  
-  var twitter = new TwitterApp;
-  twitter.post(tweet);
-
-  sheet.getRange(index + 1, POST_CHECK_COL).setValue(true);
+  }
 }
 
 /**
