@@ -1,3 +1,10 @@
+/**
+ * エラーオブジェクトを扱うクラス
+ *
+ * @param {object} errorObject 発生したエラーオブジェクト
+ * @param {object} time        発生時刻のDateオブジェクト
+ *
+ */
 var ErrorLog = function (errorObject, time) {
   this.time   = time;
 
@@ -20,6 +27,13 @@ var ErrorLog = function (errorObject, time) {
   this.description = errorObject.message;
 };
 
+/**
+ * エラーを記録する
+ *
+ * @param {object} spreadsheet ログを行うspreadsheetオブジェクト
+ * @param {string} sheetName   シート名
+ *
+ */
 ErrorLog.prototype.output = function(spreadsheet, sheetName) {
   if (!spreadsheet) {
     var PROPS = PropertiesService.getScriptProperties();

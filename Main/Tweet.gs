@@ -1,3 +1,7 @@
+/**
+ * スプレッドシートに取得したRSSフィードをTwitterに投稿する
+ *
+ */
 function Main() {
   try {
     var ss     = SpreadsheetApp.getActiveSpreadsheet();
