@@ -8,12 +8,12 @@ function Main() {
     var index = getBlankRowIndex(values, POST_CHECK_COL - 1);
     
     // 何もなければ終了
-    if (index < 0) return
+    if (index < 0) return;
     
     var feeds = values[index];
     var tweetSource = new Feed(feeds,ss);
-    var tweet = tweetSource.tweet;
-    
+    var tweet       = tweetSource.tweet;
+
     var twitter = new TwitterApp;
     twitter.post(tweet);
     

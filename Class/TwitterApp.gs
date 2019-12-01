@@ -13,7 +13,7 @@
  */
 var TwitterApp = function() {
   // 認証インスタンス
-  this.authInstance = generateInstance();
+  this.authInstance = generateInstance();  
 };
 
 /**
@@ -23,7 +23,7 @@ var generateInstance = function() {
   var props = PropertiesService.getScriptProperties();
   
   var instance = TwitterWebService.getInstance(
-    props.getProperty('API_KEY'), // API Key
+    props.getProperty('API_KEY'),        // API Key
     props.getProperty('API_SECRET_KEY')  // API secret key
   );
 

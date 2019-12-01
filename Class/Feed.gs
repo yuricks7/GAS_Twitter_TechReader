@@ -7,27 +7,41 @@
 var Feed = function(feeds, ss) {
   this.ss = ss;
 
+  // 記事のデータ
   this.feedTitle  = feeds[0];
   this.feedUrl    = feeds[1];
   this.postTime   = feeds[2]; // ?
 
-//  var serialValue = feeds[2];
-//  Logger.log(serialValue);
-//
-//  var unixValue   = (serialValue - 25569) * 24*60*60;
-//  var date = new Date(unixValue * 1000);
-//  this.postTimeJst = getJstString(); // ?
+  this.thumbnail    = feeds[3]; // URLの方が良いかも？
+  this.entryTitle   = feeds[4];
+  
+  // URLの短縮化
+  var entryUrl = feeds[5];
+  if (entryUrl.indexOf('%') > 0) {
+    var bitly = new Bitly();
+    entryUrl  = bitly.shorten(entryUrl);
+  }
+  this.entryUrl     = entryUrl;
 
-  this.thumnail   = feeds[3]; // URLの方が良いかも？
-  this.entryTitle = feeds[4];
-  this.entryUrl   = feeds[5];
-  this.body       = feeds[6];
+  // 本文の抽出
+  // JavaScriptでHTMLタグを削除する正規表現 | Qiita
+  // https://qiita.com/miiitaka/items/793555b4ccb0259a4cb8
+  var bodyWithHtml = feeds[6]; // HTMLタグつき
+  this.body        = bodyWithHtml.replace(/<("[^"]*"|'[^']*'|[^'">])*>/g,''); // HTMLタグ除去
 
-  /* フィードシートからカテゴリの検索 */
+  // [フィード]シートからカテゴリの検索
   this.feedCategory = getFeedCategory(ss, this.feedTitle);
 
   // ツイート本文
   this.tweet = this.getTweetText();
+  
+//  var serialValue = feeds[2];
+//  Logger.log(serialValue);
+//
+//  var unixValue    = (serialValue - 25569) * 24*60*60;
+//  var date         = new Date(unixValue * 1000);
+//  this.postTimeJst = getJstString(); // ?
+
 };
 
 /**
@@ -74,8 +88,8 @@ var vlookup = function(key, arr2d, rowSearchColIndex, returnColIndex) {
     return arr2d[targetIndex][returnColIndex];
   } catch(e) {
     //  // フィード名が変わるとエラーになるので置き換え
-    //  Logger.log(key);  
-    return '???';
+    //  Logger.log(key);
+    return '■■';
   }
   return arr2d[targetIndex][returnColIndex];
 }
@@ -83,43 +97,64 @@ var vlookup = function(key, arr2d, rowSearchColIndex, returnColIndex) {
 /**
  * ツイートの本文を作成する
  *
+ * 生成イメージ
+ * ※Tweetからリンクに飛びたいので記事URLは死守する！
+ * ──────────────
+ * ▼[カテゴリ] ブログタイトル
+ * 記事タイトル
+ * https://hogehoge.html
+ * 本文…
+ * ──────────────
+ *
  * @param {object} feeds フィード1行分の配列
  * @param {object} ss 対象のスプレッドシート
  *
  * @return {string} 作成した文章
  */
 Feed.prototype.getTweetText = function() {
-  
   const LF  = '\n';
-  var tweet = '';
-  tweet += '▼[' + this.feedCategory + '] ' +　this.feedTitle;
-  tweet += LF + this.entryTitle;
-  tweet += LF + this.entryUrl;
-  tweet += LF + this.body;
+  
+  var header = '';
+  header += '▼[' + this.feedCategory + '] ' +　this.feedTitle;
+  header += LF + this.entryTitle + LF; 
 
-  // 長かったらカットしておく
-  if (tweet.length > 140) {
-    tweet = tweet.substring(0, 139) + '…';
+  var body = LF + this.body;
+
+  // 文字数の調整
+  // ※下記の[文字数]を参考に作成
+  // https://phonypianist.sakura.ne.jp/convenienttool/strcount.html
+  const HEADER_LENGTH = header.length;
+  const BODY_LENGTH   = this.body.length;
+  const MAX_LENGTH    = 140;
+  if (HEADER_LENGTH + BODY_LENGTH > MAX_LENGTH) {
+    const LENGTH_REMAINED = MAX_LENGTH - HEADER_LENGTH - 2; // 余裕を持って多めに引いておく…
+    body = body.substring(0, LENGTH_REMAINED) + '…';
   }
+
+  var url   = this.entryUrl;
+  var tweet = header + url + body;
+  
+  Logger.log(tweet.length);
+  Logger.log(tweet);
   
   return tweet;
 }
 
-/**
- * 時刻を読みやすいように変換する
- *
- * 外部ライブラリを使用
- * [name]    Moment.js
- * [key]     MHMchiX6c1bwSqGM1PZiW_PxhMjh3Sh48
- * [version] 9.0
- *
- * @return {string} 「yyyy/mm/dd (曜日) hh:mm:ss形式」の文字列
- */
-var getJstString = function() {
-  
-  var ret = Moment.moment(this.postTime).format('YYYY/MM/DD (ddd) hh:mm:ss');
-  Logger.log(typeof ret);
-  Logger.log(ret);
-
-  return String(ret) + ' - JST';
-}
+///**
+// * 時刻を読みやすいように変換する
+// *
+// * 外部ライブラリを使用
+// * [name]    Moment.js
+// * [key]     MHMchiX6c1bwSqGM1PZiW_PxhMjh3Sh48
+// * [version] 9.0
+// *
+// * @return {string} 「yyyy/mm/dd (曜日) hh:mm:ss形式」の文字列
+// */
+//var getJstString = function() {
+//  
+//  var ret = Moment.moment(this.postTime).format('YYYY/MM/DD (ddd) hh:mm:ss');
+//  Logger.log(typeof ret);
+//  Logger.log(ret);
+//
+//  return String(ret) + ' - JST';
+//}
