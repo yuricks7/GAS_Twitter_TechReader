@@ -1,8 +1,7 @@
 function Main() {
   try {
-    
     var ss     = SpreadsheetApp.getActiveSpreadsheet();
-    var sheet  = ss.getSheetByName('シート1');
+    var sheet  = ss.getSheetByName('記事');
     var values = sheet.getDataRange().getValues();
     
     const POST_CHECK_COL = 8;
