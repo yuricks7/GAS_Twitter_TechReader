@@ -115,24 +115,40 @@ Feed.prototype.getTweetText = function() {
   const LF  = '\n';
   
   var header = '';
-  header += '▼[' + this.feedCategory + '] ' +　this.feedTitle;
-  header += LF + this.entryTitle + LF; 
+  header += '▼[' + this.feedCategory + '] ' +　this.feedTitle + LF;
+  header += this.entryTitle + LF;
 
   var body = LF + this.body;
 
-  // 文字数の調整
-  // ※下記の[文字数]を参考に作成
-  // https://phonypianist.sakura.ne.jp/convenienttool/strcount.html
-  const HEADER_LENGTH = header.length;
-  const BODY_LENGTH   = this.body.length;
-  const MAX_LENGTH    = 140;
-  if (HEADER_LENGTH + BODY_LENGTH > MAX_LENGTH) {
-    const LENGTH_REMAINED = MAX_LENGTH - HEADER_LENGTH - 2; // 余裕を持って多めに引いておく…
-    body = body.substring(0, LENGTH_REMAINED) + '…';
+  const TWEET_LENGTH    = 140;
+  const URL_LENGTH      = 12; // 正確には11.5文字
+  const REMAINED_LENGTH = TWEET_LENGTH - URL_LENGTH
+  var tweet = '';
+
+  // タイトルだけで超えたらタイトル+URL
+  if (header.length > REMAINED_LENGTH) {
+    Logger.log('Hi!');
+    var newHeader = header.substing(0, REMAINED_LENGTH - 1);
+
+    tweet = newHeader + '…' + LF + this.entryUrl;
+    return tweet
   }
 
-  var url   = this.entryUrl;
-  var tweet = header + url + body;
+  var temp  = header + body;
+  Logger.log(temp.length);
+  
+  // 本文も足して超えたら、本文だけ削る
+  if (temp.length > REMAINED_LENGTH) {
+    Logger.log('Ho!');
+    const REMAINED_FOR_BODY = REMAINED_LENGTH - (header.length + String(LF).length);
+    var newBody = body.substring(0, REMAINED_FOR_BODY - 1);
+    
+    tweet = header + this.entryUrl + newBody + '…';
+    Logger.log(tweet);
+    return tweet
+  }
+  
+  tweet = header + this.entryUrl + body;
   
   Logger.log(tweet.length);
   Logger.log(tweet);

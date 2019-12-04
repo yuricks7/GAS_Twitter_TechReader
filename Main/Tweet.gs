@@ -14,7 +14,7 @@ function Main() {
     // 何もなければ終了
     if (index < 0) return;
     
-    var feeds = values[index];
+    var feeds       = values[index];
     var tweetSource = new Feed(feeds,ss);
     var tweet       = tweetSource.tweet;
 
