@@ -8,16 +8,19 @@ function Main() {
     var sheet  = ss.getSheetByName('記事');
     var values = sheet.getDataRange().getValues();
     
+    // 投稿のターゲットを探す
     const POST_CHECK_COL = 8;
     var index = getBlankRowIndex(values, POST_CHECK_COL - 1);
     
     // 何もなければ終了
     if (index < 0) return;
     
+    // ツイートを生成
     var feeds       = values[index];
     var tweetSource = new Feed(feeds,ss);
     var tweet       = tweetSource.tweet;
 
+    // 投稿
     var twitter = new TwitterApp;
     twitter.post(tweet);
 
