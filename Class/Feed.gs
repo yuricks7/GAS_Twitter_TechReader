@@ -34,14 +34,6 @@ var Feed = function(feeds, ss) {
 
   // ツイート本文
   this.tweet = this.getTweetText();
-  
-//  var serialValue = feeds[2];
-//  Logger.log(serialValue);
-//
-//  var unixValue    = (serialValue - 25569) * 24*60*60;
-//  var date         = new Date(unixValue * 1000);
-//  this.postTimeJst = getJstString(); // ?
-
 };
 
 /**
@@ -158,22 +150,3 @@ Feed.prototype.getTweetText = function() {
   
   return tweet;
 }
-
-///**
-// * 時刻を読みやすいように変換する
-// *
-// * 外部ライブラリを使用
-// * [name]    Moment.js
-// * [key]     MHMchiX6c1bwSqGM1PZiW_PxhMjh3Sh48
-// * [version] 9.0
-// *
-// * @return {string} 「yyyy/mm/dd (曜日) hh:mm:ss形式」の文字列
-// */
-//var getJstString = function() {
-//  
-//  var ret = Moment.moment(this.postTime).format('YYYY/MM/DD (ddd) hh:mm:ss');
-//  Logger.log(typeof ret);
-//  Logger.log(ret);
-//
-//  return String(ret) + ' - JST';
-//}
