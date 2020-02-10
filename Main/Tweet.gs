@@ -20,8 +20,9 @@ function Main() {
 
     var twitter = new TwitterApp;
     twitter.post(tweet);
-    
-    sheet.getRange(index + 1, POST_CHECK_COL).setValue(true);
+
+    // 後処理
+    sheet.deleteRow(index + 1);
     
   } catch (e) {
     var occuredTime = new Date();
