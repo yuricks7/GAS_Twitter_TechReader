@@ -128,8 +128,11 @@ Feed.prototype.getTweetText = function() {
   // タイトルだけで超えたらタイトル+URL
   if (header.length > REMAINED_LENGTH) {
     Logger.log('Hi!');
-    var newHeader = header.substing(0, REMAINED_LENGTH - 1);
 
+    // substringメソッドがうまく動かないので、substrに置き換え。
+    var newHeader = header.substr(0, REMAINED_LENGTH - 1);
+    Logger.log(newHeader);
+    
     tweet = newHeader + '…' + LF + this.entryUrl;
     return tweet
   }
