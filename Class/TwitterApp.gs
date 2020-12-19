@@ -33,10 +33,10 @@ var generateInstance = function() {
 /**
  * ツイートを投稿
  *
- * @param {string} 投稿するメッセージ
+ * @param {string} m 投稿するメッセージ
  */
 TwitterApp.prototype.post = function(m) {
-  var service = this.authInstance.getService();    
+  var service = this.authInstance.getService();
   const END_POINT_URL = 'https://api.twitter.com/1.1/statuses/update.json';
   
   var response = service.fetch(END_POINT_URL, {

@@ -37,6 +37,6 @@ function authorize() {
   var temp = new TwitterApp;
   var twitter = temp.authInstance;
 
-  temp.prorotype.authorize();
+  temp.prototype.authorize();
   
 }

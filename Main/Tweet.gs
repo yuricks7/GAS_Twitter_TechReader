@@ -23,17 +23,47 @@ function Main() {
     // 投稿
     var twitter = new TwitterApp;
     twitter.post(tweet);
+    
+    // あとでシートじゃなくStackDriverに残すように変更する（予定）
+    // console.log(tweet);
 
     // 後処理
     sheet.deleteRow(index + 1);
     
   } catch (e) {
-    var occuredTime = new Date();
-    var errorLog    = new ErrorLog(e, occuredTime);
-    var ssForLog    = SpreadsheetApp.getActiveSpreadsheet();
-    errorLog.output(ssForLog, 'エラーログ');
+    logErrorMessage(e);
 
   }
+}
+
+/**
+ * エラーログをStackDriverに出力する
+ *
+ * @param {Error} errorObject 内容
+ */
+var logErrorMessage = function(errorObject) {
+  // 例`at ${fileName} :${lineNum} (${functionName})`
+  var stack = String(errorObject.stack); // `String()`も必要…?
+
+  var funcNameStart = stack.lastIndexOf('(') + 1;
+  var funcNameEnd   = stack.length - 2;
+
+  var fileNameStart = stack.indexOf(' ') + 1;
+  var fileNameEnd   = stack.indexOf(':');
+
+  const LF  = '\n';
+  const EoL = '. ';
+  var descriptions = String(errorObject.message).split(EoL).join(EoL + LF);
+
+  var m  = '';
+  m += '[Line No.] '         + errorObject.lineNumber + LF;
+  m += '[Function Name] '    + stack.slice(funcNameStart, funcNameEnd) + LF;
+  m += '[Script File Name] ' + stack.slice(fileNameStart, fileNameEnd) + LF;
+  m += '[Error Type] '       + errorObject.name       + LF;
+  m += '[Description]' + LF;
+  m += '  ' + descriptions;
+
+  console.error(m); // Rhinoで出来るかな…？
 }
 
 /**
