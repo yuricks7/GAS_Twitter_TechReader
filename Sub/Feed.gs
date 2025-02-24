@@ -32,8 +32,8 @@ var Feed = function(feeds, ss) {
   // [フィード]シートからカテゴリの検索
   this.feedCategory = getFeedCategory(ss, this.feedTitle);
 
-  // ツイート本文
-  this.tweet = this.getTweetText();
+  // ポスト本文
+  this.m = this.generate();
 };
 
 /**
@@ -78,16 +78,17 @@ var vlookup = function(key, arr2d, rowSearchColIndex, returnColIndex) {
 
   try {
     return arr2d[targetIndex][returnColIndex];
+
   } catch(e) {
     //  // フィード名が変わるとエラーになるので置き換え
-    //  Logger.log(key);
+    //  console.log(key);
     return '■■';
   }
   return arr2d[targetIndex][returnColIndex];
 }
 
 /**
- * ツイートの本文を作成する
+ * 本文を生成する
  *
  * 生成イメージ
  * ※Tweetからリンクに飛びたいので記事URLは死守する！
@@ -103,50 +104,50 @@ var vlookup = function(key, arr2d, rowSearchColIndex, returnColIndex) {
  *
  * @return {string} 作成した文章
  */
-Feed.prototype.getTweetText = function() {
+Feed.prototype.generate = function() {
   const LF  = '\n';
   
   var header = '';
-  header += '▼[' + this.feedCategory + '] ' +　this.feedTitle + LF;
-  header += this.entryTitle + LF;
+  header += `▼[${this.feedCategory}]${this.feedTitle}${LF}`;
+  header += `${this.entryTitle}${LF}`;
 
   var body = LF + this.body;
 
   const TWEET_LENGTH    = 140;
   const URL_LENGTH      = 12; // 正確には11.5文字
   const REMAINED_LENGTH = TWEET_LENGTH - URL_LENGTH
-  var tweet = '';
+  var m = '';
 
   // タイトルだけで超えたらタイトル+URL
   if (header.length > REMAINED_LENGTH) {
-    Logger.log('Hi!');
+console.info('タイトルだけで文字数超えてます。');
 
     // substringメソッドがうまく動かないので、substrに置き換え。
-    var newHeader = header.substr(0, REMAINED_LENGTH - 1);
-    Logger.log(newHeader);
+    var newHeader = header.substring(0, REMAINED_LENGTH - 1);
+console.log(newHeader);
     
-    tweet = newHeader + '…' + LF + this.entryUrl;
-    return tweet
+    m = `${newHeader}…${LF}${this.entryUrl}`;
+    return m
   }
 
   var temp  = header + body;
-  Logger.log(temp.length);
+console.log(`タイトルをいじった後の文字数：${temp.length}`);
   
   // 本文も足して超えたら、本文だけ削る
   if (temp.length > REMAINED_LENGTH) {
-    Logger.log('Ho!');
+console.log('本文が長いです。');
     const REMAINED_FOR_BODY = REMAINED_LENGTH - (header.length + String(LF).length);
     var newBody = body.substring(0, REMAINED_FOR_BODY - 1);
     
-    tweet = header + this.entryUrl + newBody + '…';
-    Logger.log(tweet);
-    return tweet
+    m = `${header}${this.entryUrl}${newBody}…`;
+console.log(`【本文削ったポスト】\n${m}`);
+    return m
   }
+
+  m = `${header}${this.entryUrl}${body}`;
   
-  tweet = header + this.entryUrl + body;
+console.log(`今回の文字数:${m.length}`);
+console.log(`【今回のポスト】\n${m}`);
   
-  Logger.log(tweet.length);
-  Logger.log(tweet);
-  
-  return tweet;
+  return m;
 }
