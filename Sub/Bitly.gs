@@ -25,65 +25,45 @@
  * ───────────────────────────────────
  *
  */
-var Bitly = function() {
-  
-  // GETメソッド用の値を準備
-  const PROPS = PropertiesService.getScriptProperties();
-  this.token = PROPS.getProperty('BITLY_API_TOKEN');
+class Bitly {
 
-  // this.baseUrl = 'https://api-ssl.bitly.com/v3/shorten?access_token=';
-  this.baseUrl = 'https://api-ssl.bitly.com/v4/shorten'; // bitly api v4
-}
+  /**
+   * コンストラクタ
+   */
+  constructor() {
+    // GETメソッド用の値を準備
+    const PROPS = PropertiesService.getScriptProperties();
+    this.token = PROPS.getProperty('BITLY_API_TOKEN');
 
-/**
- * bitlyapiから短縮URLを生成
- * 
- * - ▼参照
- *    - https://zenn.dev/antyuntyun/articles/gas-generate-short-url
- * 
- * @param {string} longUrl - 短縮したい長いURL
- * 
- * @returns {string} - 短縮URL
- */
-Bitly.prototype.shorten = function(longUrl) {
-  const payload = { long_url: longUrl }
-  const headers = {
-    Authorization: 'Bearer ' + this.token,
-    'Content-Type': 'application/json',
-  }
-  const options = {
-    method: 'POST',
-    headers: headers,
-    payload: JSON.stringify(payload),
+    // this.baseUrl = 'https://api-ssl.bitly.com/v3/shorten?access_token=';
+    this.baseUrl = 'https://api-ssl.bitly.com/v4/shorten'; // bitly api v4
   }
 
-  const response = UrlFetchApp.fetch(this.baseUrl, options)
-  const content = response.getContentText('UTF-8')
+  /**
+   * bitlyapiから短縮URLを生成
+   * 
+   * - ▼参照
+   *    - https://zenn.dev/antyuntyun/articles/gas-generate-short-url
+   * 
+   * @param {string} longUrl - 短縮したい長いURL
+   * 
+   * @returns {string} - 短縮URL
+   */
+  shorten(longUrl) {
+    const payload = { long_url: longUrl }
+    const headers = {
+      Authorization: 'Bearer ' + this.token,
+      'Content-Type': 'application/json',
+    }
+    const options = {
+      method: 'POST',
+      headers: headers,
+      payload: JSON.stringify(payload),
+    }
 
-  return JSON.parse(content).link
+    const response = UrlFetchApp.fetch(this.baseUrl, options)
+    const content = response.getContentText('UTF-8')
+
+    return JSON.parse(content).link
+  }
 }
-
-// /**
-//  * 短縮の実行
-//  *
-//  * @param {string} url 短縮したいURL
-//  *
-//  * @return {string} 短縮後のURL
-//  */
-// Bitly.prototype.shorten = function(longUrl) {
-
-//   const URL_ENCODED = encodeURIComponent(longUrl); // リクエスト用にエンコードしておく
-//   const END_POINT   = this.baseUrl + this.token + '&longUrl=' + URL_ENCODED;
-  
-//   // リクエストの実行
-//   var result = UrlFetchApp.fetch(
-//     END_POINT, {
-//       method     : "GET",
-//       contentType: "application/json;"
-//     }
-//   );
-
-//   // リクエストの戻り値から値を抽出して返す
-//   var json = JSON.parse(result.getContentText('utf-8'));
-//   return json.data.url;
-// }

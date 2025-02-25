@@ -1,8 +1,8 @@
 function myFunction() {
   try {
-    var ss     = SpreadsheetApp.getActiveSpreadsheet();
-    var sheet  = ss.getSheetByName('記事');
-    var values = sheet.getDataRange().getValues();
+    let ss     = SpreadsheetApp.getActiveSpreadsheet();
+    let sheet  = ss.getSheetByName('記事');
+    let values = sheet.getDataRange().getValues();
     Logger.log(values);
     
     // 1週間前の日付を検索
@@ -11,9 +11,9 @@ function myFunction() {
     
   } catch (e) {
     
-    var occuredTime = new Date();
-    var errorLog    = new ErrorLog(e, occuredTime);
-    var ssForLog    = SpreadsheetApp.getActiveSpreadsheet();
+    let occuredTime = new Date();
+    let errorLog    = new ErrorLog(e, occuredTime);
+    let ssForLog    = SpreadsheetApp.getActiveSpreadsheet();
     errorLog.output(ssForLog, 'エラーログ');
     
   }
