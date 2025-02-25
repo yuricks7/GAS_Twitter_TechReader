@@ -100,7 +100,7 @@ var vlookup = function(key, arr2d, rowSearchColIndex, returnColIndex) {
  * ──────────────
  *
  * @param {object} feeds フィード1行分の配列
- * @param {object} ss 対象のスプレッドシート
+ * @param {object} ss    対象のスプレッドシート
  *
  * @return {string} 作成した文章
  */
@@ -120,34 +120,35 @@ Feed.prototype.generate = function() {
 
   // タイトルだけで超えたらタイトル+URL
   if (header.length > REMAINED_LENGTH) {
-console.info('タイトルだけで文字数超えてます。');
+    console.info('タイトルだけで文字数超えてます。');
 
     // substringメソッドがうまく動かないので、substrに置き換え。
     var newHeader = header.substring(0, REMAINED_LENGTH - 1);
-console.log(newHeader);
+    console.log(newHeader);
     
     m = `${newHeader}…${LF}${this.entryUrl}`;
-    return m
+    return m;
   }
 
   var temp  = header + body;
-console.log(`タイトルをいじった後の文字数：${temp.length}`);
+  console.log(`タイトルをいじった後の文字数：${temp.length}`);
   
   // 本文も足して超えたら、本文だけ削る
   if (temp.length > REMAINED_LENGTH) {
-console.log('本文が長いです。');
+    console.log('本文が長いです。');
     const REMAINED_FOR_BODY = REMAINED_LENGTH - (header.length + String(LF).length);
     var newBody = body.substring(0, REMAINED_FOR_BODY - 1);
     
     m = `${header}${this.entryUrl}${newBody}…`;
-console.log(`【本文削ったポスト】\n${m}`);
-    return m
+    console.log(`【本文削ったポスト】\n${m}`);
+    return m;
   }
 
+  // 何も編集しなかった場合
   m = `${header}${this.entryUrl}${body}`;
   
-console.log(`今回の文字数:${m.length}`);
-console.log(`【今回のポスト】\n${m}`);
+  console.log(`今回の文字数:${m.length}`);
+  console.log(`【今回のポスト】\n${m}`);
   
   return m;
 }

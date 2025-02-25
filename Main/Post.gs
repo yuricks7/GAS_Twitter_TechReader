@@ -20,13 +20,13 @@ function Main() {
     if (index < 0) return;
     
     // メッセージを生成
-    var feeds      = values[index];
-    var postSource = new Feed(feeds,ss);
-    var post       = postSource.post;
+    var feeds = values[index];
+    var feed  = new Feed(feeds,ss);
 
     // 投稿
-    const slack = SlackApp.load();
-    slack.post(post);
+    const channelId = PropertiesService.getScriptProperties().getProperty('channel_id');
+    const slack     = SlackApp.load(channelId);
+    slack.post(feed.m);
 
     // 後処理
     sheet.deleteRow(index + 1);
